@@ -1,6 +1,6 @@
 package br.com.vinicius.parkingapi.controller;
 
-import br.com.vinicius.parkingapi.model.Parking;
+import br.com.vinicius.parkingapi.dto.ParkingDTO;
 import br.com.vinicius.parkingapi.service.ParkingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +17,9 @@ public class ParkingController {
     private final ParkingService parkingService;
 
     @PostMapping
-    public ResponseEntity<Parking> create(@RequestBody Parking parking) {
+    public ResponseEntity<ParkingDTO> create(@RequestBody ParkingDTO parkingDTO) {
 
-        Parking createdParking = parkingService.create(parking);
+        ParkingDTO createdParking = parkingService.create(parkingDTO);
         return ResponseEntity.ok(createdParking);
     }
 }

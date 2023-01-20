@@ -1,5 +1,7 @@
 package br.com.vinicius.parkingapi.service;
 
+import br.com.vinicius.parkingapi.dto.ParkingDTO;
+import br.com.vinicius.parkingapi.mapper.ParkingMapper;
 import br.com.vinicius.parkingapi.model.Parking;
 import br.com.vinicius.parkingapi.repository.ParkingRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,10 +12,12 @@ import org.springframework.stereotype.Service;
 public class ParkingService {
 
     private final ParkingRepository parkingRepository;
+    private final ParkingMapper parkingMapper;
 
-    public Parking create(Parking parking) {
+    public ParkingDTO create(ParkingDTO parkingDTO) {
 
-        Parking createdParking = parkingRepository.save(parking);
-        return createdParking;
+        Parking parkingToCreate = parkingMapper.toParking(parkingDTO);
+        Parking createdParking = parkingRepository.save(parkingToCreate);
+        return parkingMapper.toParkingDTO(createdParking);
     }
 }
