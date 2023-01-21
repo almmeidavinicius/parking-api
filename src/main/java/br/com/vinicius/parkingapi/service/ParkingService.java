@@ -7,6 +7,7 @@ import br.com.vinicius.parkingapi.repository.ParkingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,5 +29,13 @@ public class ParkingService {
         Optional<Parking> optionalParking = parkingRepository.findById(id);
         if (!optionalParking.isEmpty()) return parkingMapper.toParkingDTO(optionalParking.get());
         return null;
+    }
+
+    public List<ParkingDTO> findAll() {
+
+        List<Parking> all = parkingRepository.findAll();
+        return all.stream()
+                .map(parkingMapper::toParkingDTO)
+                .toList();
     }
 }

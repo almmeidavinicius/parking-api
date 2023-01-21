@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/parking")
 @RequiredArgsConstructor
@@ -31,5 +33,11 @@ public class ParkingController {
 
         ParkingDTO parkingDTO = parkingService.findById(id);
         return ResponseEntity.ok(parkingDTO);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ParkingDTO>> findAll() {
+        List<ParkingDTO> parkingDTOList = parkingService.findAll();
+        return ResponseEntity.ok(parkingDTOList);
     }
 }
