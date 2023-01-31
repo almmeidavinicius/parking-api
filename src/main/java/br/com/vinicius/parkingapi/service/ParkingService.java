@@ -1,5 +1,6 @@
 package br.com.vinicius.parkingapi.service;
 
+import br.com.vinicius.parkingapi.dto.ParkingCreateDTO;
 import br.com.vinicius.parkingapi.dto.ParkingDTO;
 import br.com.vinicius.parkingapi.mapper.ParkingMapper;
 import br.com.vinicius.parkingapi.model.Parking;
@@ -7,6 +8,7 @@ import br.com.vinicius.parkingapi.repository.ParkingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,9 +19,10 @@ public class ParkingService {
     private final ParkingRepository parkingRepository;
     private final ParkingMapper parkingMapper;
 
-    public ParkingDTO create(ParkingDTO parkingDTO) {
+    public ParkingDTO create(ParkingCreateDTO parkingCreateDTO) {
 
-        Parking parkingToCreate = parkingMapper.toParking(parkingDTO);
+        Parking parkingToCreate = parkingMapper.toParking(parkingCreateDTO);
+        parkingToCreate.setEntryDate(LocalDateTime.now());
         Parking createdParking = parkingRepository.save(parkingToCreate);
         return parkingMapper.toParkingDTO(createdParking);
     }

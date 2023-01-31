@@ -1,8 +1,7 @@
 package br.com.vinicius.parkingapi.dto;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,25 +13,23 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ParkingDTO {
 
     private Long id;
 
-    @NotEmpty
     private String license;
 
-    @NotEmpty
-    @Size(min = 2, max = 2)
     private String state;
 
-    @NotEmpty
     private String model;
 
-    @NotEmpty
     private String color;
 
+    @JsonFormat(pattern = "dd-MM-yyy HH:mm")
     private LocalDateTime entryDate;
 
+    @JsonFormat(pattern = "dd-MM-yyy HH:mm")
     private LocalDateTime departureDate;
 
     private Double bill;

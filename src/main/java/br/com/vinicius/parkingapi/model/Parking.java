@@ -1,6 +1,7 @@
 package br.com.vinicius.parkingapi.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +20,6 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Parking {
 
     @Id
@@ -39,11 +39,9 @@ public class Parking {
     private String color;
 
     @Column
-    @JsonFormat(pattern = "dd-MM-yyy")
     private LocalDateTime entryDate;
 
     @Column
-    @JsonFormat(pattern = "dd-MM-yyy")
     private LocalDateTime departureDate;
 
     @Column

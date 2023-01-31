@@ -1,5 +1,6 @@
 package br.com.vinicius.parkingapi.controller;
 
+import br.com.vinicius.parkingapi.dto.ParkingCreateDTO;
 import br.com.vinicius.parkingapi.dto.ParkingDTO;
 import br.com.vinicius.parkingapi.service.ParkingService;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +23,9 @@ public class ParkingController {
     private final ParkingService parkingService;
 
     @PostMapping
-    public ResponseEntity<ParkingDTO> create(@RequestBody ParkingDTO parkingDTO) {
+    public ResponseEntity<ParkingDTO> create(@RequestBody ParkingCreateDTO parkingCreateDTO) {
 
-        ParkingDTO createdParking = parkingService.create(parkingDTO);
+        ParkingDTO createdParking = parkingService.create(parkingCreateDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdParking);
     }
 
