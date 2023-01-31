@@ -2,6 +2,7 @@ package br.com.vinicius.parkingapi.controller;
 
 import br.com.vinicius.parkingapi.dto.ParkingCreateDTO;
 import br.com.vinicius.parkingapi.dto.ParkingDTO;
+import br.com.vinicius.parkingapi.exception.ParkingNotFoundException;
 import br.com.vinicius.parkingapi.service.ParkingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class ParkingController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ParkingDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<ParkingDTO> findById(@PathVariable Long id) throws ParkingNotFoundException {
 
         ParkingDTO parkingDTO = parkingService.findById(id);
         return ResponseEntity.ok(parkingDTO);

@@ -2,6 +2,7 @@ package br.com.vinicius.parkingapi.service;
 
 import br.com.vinicius.parkingapi.dto.ParkingCreateDTO;
 import br.com.vinicius.parkingapi.dto.ParkingDTO;
+import br.com.vinicius.parkingapi.exception.ParkingNotFoundException;
 import br.com.vinicius.parkingapi.mapper.ParkingMapper;
 import br.com.vinicius.parkingapi.model.Parking;
 import br.com.vinicius.parkingapi.repository.ParkingRepository;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,18 +27,20 @@ public class ParkingService {
         return parkingMapper.toParkingDTO(createdParking);
     }
 
-    public ParkingDTO findById(Long id) {
+    public ParkingDTO findById(Long id) throws ParkingNotFoundException {
 
-        Optional<Parking> optionalParking = parkingRepository.findById(id);
-        if (!optionalParking.isEmpty()) return parkingMapper.toParkingDTO(optionalParking.get());
-        return null;
+        Parking parking = checkIfExists(id);
+        return parkingMapper.toParkingDTO(parking);
     }
 
     public List<ParkingDTO> findAll() {
 
         List<Parking> all = parkingRepository.findAll();
-        return all.stream()
-                .map(parkingMapper::toParkingDTO)
-                .toList();
+        return all.stream().map(parkingMapper::toParkingDTO).toList();
+    }
+
+    private Parking checkIfExists(Long id) throws ParkingNotFoundException {
+
+        return parkingRepository.findById(id).orElseThrow(() -> new ParkingNotFoundException(id));
     }
 }
