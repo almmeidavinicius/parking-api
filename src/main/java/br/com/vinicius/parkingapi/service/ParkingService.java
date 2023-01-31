@@ -39,6 +39,23 @@ public class ParkingService {
         return all.stream().map(parkingMapper::toParkingDTO).toList();
     }
 
+    public void delete(Long id) throws ParkingNotFoundException {
+
+        Parking parkingToDelete = checkIfExists(id);
+        parkingRepository.deleteById(parkingToDelete.getId());
+    }
+
+    public ParkingDTO update(Long id, ParkingCreateDTO parkingToUpdateDTO) throws ParkingNotFoundException {
+
+        Parking parkingToUpdate = checkIfExists(id);
+        parkingToUpdate.setLicense(parkingToUpdateDTO.getLicense());
+        parkingToUpdate.setState(parkingToUpdateDTO.getState());
+        parkingToUpdate.setModel(parkingToUpdateDTO.getModel());
+        parkingToUpdate.setColor(parkingToUpdateDTO.getColor());
+        Parking updatedParking = parkingRepository.save(parkingToUpdate);
+        return parkingMapper.toParkingDTO(updatedParking);
+    }
+
     private Parking checkIfExists(Long id) throws ParkingNotFoundException {
 
         return parkingRepository.findById(id).orElseThrow(() -> new ParkingNotFoundException(id));
