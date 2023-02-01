@@ -56,6 +56,14 @@ public class ParkingService {
         return parkingMapper.toParkingDTO(updatedParking);
     }
 
+    public ParkingDTO checkOut(Long id) throws ParkingNotFoundException {
+        Parking parkingToSetBill = checkIfExists(id);
+        parkingToSetBill.setDepartureDate(LocalDateTime.now());
+        parkingToSetBill.setBill(CheckOutService.getBill(parkingToSetBill.getEntryDate(), parkingToSetBill.getDepartureDate()));
+        Parking updatedParking = parkingRepository.save(parkingToSetBill);
+        return parkingMapper.toParkingDTO(updatedParking);
+    }
+
     private Parking checkIfExists(Long id) throws ParkingNotFoundException {
 
         return parkingRepository.findById(id).orElseThrow(() -> new ParkingNotFoundException(id));

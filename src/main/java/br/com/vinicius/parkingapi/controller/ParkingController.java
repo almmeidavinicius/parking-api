@@ -32,6 +32,12 @@ public class ParkingController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdParking);
     }
 
+    @PostMapping("/{id}")
+    public ResponseEntity<ParkingDTO> checkOut(@PathVariable Long id) throws ParkingNotFoundException {
+        ParkingDTO parkingDTO = parkingService.checkOut(id);
+        return ResponseEntity.ok(parkingDTO);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ParkingDTO> findById(@PathVariable Long id) throws ParkingNotFoundException {
 
