@@ -4,6 +4,12 @@ import br.com.vinicius.parkingapi.dto.ParkingCreateDTO;
 import br.com.vinicius.parkingapi.dto.ParkingDTO;
 import br.com.vinicius.parkingapi.exception.ParkingNotFoundException;
 import br.com.vinicius.parkingapi.service.ParkingService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "Parking endpoint")
 @RestController
 @RequestMapping("/parking")
 @RequiredArgsConstructor
@@ -25,26 +32,35 @@ public class ParkingController {
 
     private final ParkingService parkingService;
 
+    @Operation(summary = "Create a new entrance to the parking by informing the following data: license, state, model and color")
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Created")})
     @PostMapping
-    public ResponseEntity<ParkingDTO> create(@RequestBody ParkingCreateDTO parkingCreateDTO) {
+    public ResponseEntity<ParkingDTO> create(@RequestBody @Valid ParkingCreateDTO parkingCreateDTO) {
 
         ParkingDTO createdParking = parkingService.create(parkingCreateDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdParking);
     }
 
+    @Operation(summary = "Calculates the bill to be paid in the parking")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"), @ApiResponse(responseCode = "404", description = "Not Found")})
     @PostMapping("/{id}")
     public ResponseEntity<ParkingDTO> checkOut(@PathVariable Long id) throws ParkingNotFoundException {
+
         ParkingDTO parkingDTO = parkingService.checkOut(id);
         return ResponseEntity.ok(parkingDTO);
     }
 
+    @Operation(summary = "Find a parking by informing the id")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"), @ApiResponse(responseCode = "404", description = "Not Found")})
     @GetMapping("/{id}")
-    public ResponseEntity<ParkingDTO> findById(@PathVariable Long id) throws ParkingNotFoundException {
+    public ResponseEntity<ParkingDTO> findById(@Parameter(description = "Id of parking to be searched") @PathVariable Long id) throws ParkingNotFoundException {
 
         ParkingDTO parkingDTO = parkingService.findById(id);
         return ResponseEntity.ok(parkingDTO);
     }
 
+    @Operation(summary = "List all registered parking lots")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
     @GetMapping
     public ResponseEntity<List<ParkingDTO>> findAll() {
 
@@ -52,6 +68,8 @@ public class ParkingController {
         return ResponseEntity.ok(parkingDTOList);
     }
 
+    @Operation(summary = "Delete a parking informing your id")
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "No Content"), @ApiResponse(responseCode = "404", description = "Not Found")})
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable Long id) throws ParkingNotFoundException {
 
@@ -59,6 +77,8 @@ public class ParkingController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @Operation(summary = "Update parking information")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"), @ApiResponse(responseCode = "404", description = "Not Found")})
     @PutMapping("/{id}")
     public ResponseEntity<ParkingDTO> update(@PathVariable Long id, @RequestBody ParkingCreateDTO parkingToUpdateDTO) throws ParkingNotFoundException {
 
