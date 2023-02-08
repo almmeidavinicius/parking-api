@@ -3,7 +3,7 @@ package br.com.vinicius.parkingapi.service;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-public class CheckOutService {
+public class CheckoutService {
 
     public static Double getBill(LocalDateTime entryDate, LocalDateTime departureDate) {
 

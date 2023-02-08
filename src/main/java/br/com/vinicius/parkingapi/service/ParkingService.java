@@ -59,7 +59,7 @@ public class ParkingService {
     public ParkingDTO checkOut(Long id) throws ParkingNotFoundException {
         Parking parkingToSetBill = checkIfExists(id);
         parkingToSetBill.setDepartureDate(LocalDateTime.now());
-        parkingToSetBill.setBill(CheckOutService.getBill(parkingToSetBill.getEntryDate(), parkingToSetBill.getDepartureDate()));
+        parkingToSetBill.setBill(CheckoutService.getBill(parkingToSetBill.getEntryDate(), parkingToSetBill.getDepartureDate()));
         Parking updatedParking = parkingRepository.save(parkingToSetBill);
         return parkingMapper.toParkingDTO(updatedParking);
     }
