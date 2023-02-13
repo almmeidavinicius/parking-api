@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,8 +35,14 @@ public class ParkingController {
 
     private final ParkingService parkingService;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Create a new parking record")
-    @ApiResponse(responseCode = "201", description = "Created")
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Created",
+            content = {@Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ParkingDTO.class))}),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content)})
     @PostMapping
     public ResponseEntity<ParkingDTO> create(@RequestBody @Valid ParkingCreateDTO parkingCreateDTO) {
 
@@ -43,11 +50,14 @@ public class ParkingController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdParking);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @Operation(summary = "Find a parking by your id")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK",
             content = {@Content(mediaType = "application/json",
                     schema = @Schema(implementation = ParkingDTO.class))}),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content)})
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content)})
     @GetMapping("/{id}")
     public ResponseEntity<ParkingDTO> findById(@PathVariable Long id) throws ParkingNotFoundException {
 
@@ -55,9 +65,12 @@ public class ParkingController {
         return ResponseEntity.ok(parkingDTO);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Calculates the bill to be paid in the parking")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content)})
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content)})
     @PostMapping("/{id}")
     public ResponseEntity<ParkingDTO> checkOut(@PathVariable Long id) throws ParkingNotFoundException {
 
@@ -65,8 +78,13 @@ public class ParkingController {
         return ResponseEntity.ok(parkingDTO);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @Operation(summary = "List all registered parking lots")
-    @ApiResponse(responseCode = "200", description = "OK")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK",
+            content = {@Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ParkingDTO.class))}),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content)})
     @GetMapping
     public ResponseEntity<List<ParkingDTO>> findAll(HttpServletRequest request) {
 
@@ -74,9 +92,12 @@ public class ParkingController {
         return ResponseEntity.ok(parkingDTOList);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Delete a parking by your id")
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "No Content", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content)})
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content)})
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable Long id) throws ParkingNotFoundException {
 
@@ -84,9 +105,12 @@ public class ParkingController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @Operation(summary = "Update parking information")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content)})
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content)})
     @PutMapping("/{id}")
     public ResponseEntity<ParkingDTO> update(@PathVariable Long id, @RequestBody ParkingCreateDTO parkingToUpdateDTO) throws ParkingNotFoundException {
 
